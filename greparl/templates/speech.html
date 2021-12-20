@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title%}Speech{% endblock %}
+
+{% block content %}
+  <h2>#{{ speech.id }}</h2>
+  <table>
+    <tr>
+      <th>Speaker</th>
+      <td>{{ speech.member_name }}</td>
+    </tr>
+    <tr>
+      <th>Speaker's Gender</th>
+      <td>{{ speech.gender }}</td>
+    </tr>
+    <tr>
+      <th>Sitting Date</th>
+      <td>{{ speech.sitting_date }}</td>
+    </tr>
+    <tr>
+      <th>Political Party</th>
+      <td>{{ speech.political_party }}</td>
+    </tr>
+  </table>
+  <p>{{speech.contents}}</p>
+
+{% endblock %}

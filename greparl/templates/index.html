@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title%}Home{% endblock %}
+
+{% block content %}
+  <h2 class="text-center py-2">Grep the Greek Parliament</h2>
+  <form class="text-center" action="/search" method="post" autocomplete="off">
+    <input class="my-3" type="text" size="55" id="qString" name="qString" autocomplete="off"><br>
+    <input class="mx-1" type="submit" name="grep" value="Grep Parliament!">
+    <input class="mx-1" type="submit" name="randomGrep" value="I'm Feeling Lucky">
+  </form>
+{% endblock %}
