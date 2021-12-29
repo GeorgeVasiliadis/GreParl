@@ -23,7 +23,7 @@ def create_app():
     # *COMMENT OUT BEFOR DEPLOYMENT*
     app.config.from_pyfile(abs_path("config/dev.cfg"))
 
-    engine = SearchEngine(abs_path("data/index/index"), abs_path("data/speeches.csv"))
+    engine = SearchEngine()
 
     @app.route("/")
     def index():

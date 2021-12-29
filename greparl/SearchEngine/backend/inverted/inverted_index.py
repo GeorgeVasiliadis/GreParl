@@ -36,6 +36,9 @@ class InvertedIndex:
         :param index_file_name: The file name of the new index
         :param replace: Delete the contents of an existing index, if it exists.
         """
+        if not os.path.exists("index") or not os.path.isdir("index"):
+            os.mkdir("index")
+        index_file_name = "index/{}".format(index_file_name)
         # Term offsets are inserted while creating the new index, or when opening an existing index
         self.term_offsets = dict()
         self.lengths = dict()

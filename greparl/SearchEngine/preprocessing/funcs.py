@@ -1,9 +1,14 @@
 import datetime
+import pickle
 import re
 import string
+from collections import Iterable
 
 from nltk.tokenize import word_tokenize
 import unicodedata
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 from greek_stemmer import GreekStemmer
 from .stopwords import STOPWORDS
 from ..backend.speech import Speech
@@ -22,19 +27,21 @@ def remove_accents(tokens: list) -> list:
     return tokens
 
 
-def remove_stopwords(tokens: list, stopwords: set) -> list:
+def remove_stopwords(tokens: list, stopwords: Iterable[str]) -> list:
     return [token for token in tokens if token.lower() not in stopwords]
 
 
 def remove_punctuation(text):
-    return text.translate(str.maketrans('', '', string.punctuation)).removesuffix("\n")
+    remove_punctuation.translation_table = str.maketrans('', '', string.punctuation + "«»’")
+    return text.translate(remove_punctuation.translation_table).removesuffix("\n").lower()
 
 
 def capitalize(tokens: list[str]) -> list[str]:
     return [token.upper() for token in tokens]
 
 
-def process_raw_speech_text(speech_text: str, word_limit=0, perform_stemming=True, delete_stopwords=True) -> list:
+def process_raw_speech_text(speech_text: str, word_limit=0, perform_stemming=True, delete_stopwords=True,
+                            custom_stopwords=None) -> list:
     """
     Process a speech string. Tokenizes, removes punctuation, stopwords, accents and optionally stems the words. Returns
     the tokenized speech. Stemming considerably increases the processing time required.
@@ -42,17 +49,23 @@ def process_raw_speech_text(speech_text: str, word_limit=0, perform_stemming=Tru
     :param word_limit: Speeches with fewer than word_limit words are not processed. An empty list is returned. No limit
         by default.
     :param perform_stemming Whether to stem the words
-    :param delete_stopwords Whether to remove stopwords from the text
+    :param delete_stopwords Whether to remove stopwords from the text.
+    :param custom_stopwords Iterable containing custom stopwords that are removed. They must be in lowercase with
+    accents. delete_stopwords must be true for this to be considered.
     :return:
     """
+    if custom_stopwords is None:
+        custom_stopwords = set()
     speech_text = remove_punctuation(speech_text)
     tokens = word_tokenize(speech_text, language="greek")
     if len(tokens) >= word_limit:
         if delete_stopwords:
             tokens = remove_stopwords(tokens, STOPWORDS)
+            # Additionally, remove custom stopwords
+            tokens = remove_stopwords(tokens, custom_stopwords)
         tokens = remove_accents(tokens)
-        tokens = capitalize(tokens)
         if perform_stemming:
+            tokens = capitalize(tokens)
             tokens = stem(tokens)
         return tokens
     else:
@@ -69,7 +82,7 @@ def process_csv_line(line_text: str) -> Speech:
     # Keep this as a static variable to avoid recompiling it between calls
     # Regex to find an array in the line. Includes the surrounding brackets
     process_csv_line.array_regex = re.compile(r',["]?(\[[^\[]*])["]?,')
-    numbers_only_regex = re.compile(r'[^0-9]')
+    process_csv_line.numbers_only_regex = re.compile(r'[^0-9]')
     # Find all arrays in the line
     results = process_csv_line.array_regex.findall(line_text)
     # Remove the arrays and replace them with empty text
@@ -85,14 +98,14 @@ def process_csv_line(line_text: str) -> Speech:
     member_name = new_line_text[0]
     date_string = new_line_text[1]
     sitting_date = datetime.date(int(date_string[6:10]), int(date_string[3:5]), int(date_string[0:2]))
-    parliamentary_period = int(numbers_only_regex.sub('', new_line_text[2]) or -1)
-    parliamentary_session = int(numbers_only_regex.sub('', new_line_text[3]) or -1)
-    parliamentary_sitting = int(numbers_only_regex.sub('', new_line_text[4]) or -1)
+    parliamentary_period = int(process_csv_line.numbers_only_regex.sub('', new_line_text[2]) or -1)
+    parliamentary_session = int(process_csv_line.numbers_only_regex.sub('', new_line_text[3]) or -1)
+    parliamentary_sitting = int(process_csv_line.numbers_only_regex.sub('', new_line_text[4]) or -1)
     party = new_line_text[5]
     # Skip roles and government
     region = new_line_text[7]
     gender = new_line_text[9]
     speech = ""
-    speech = speech.join(new_line_text[10:])
+    speech = speech.join(new_line_text[10:]).removesuffix("\n")
     return Speech(member_name, sitting_date, parliamentary_period, parliamentary_session, parliamentary_sitting, party,
                   government, region, roles, gender, speech)

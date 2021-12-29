@@ -1,3 +1,7 @@
 greparl/data
+index
+tfidf
+groups
+speeches.csv
 .env
 *__pycache__*
