@@ -16,13 +16,15 @@ def abs_path(relative):
     """
     return os.path.join(os.path.dirname(__file__), relative)
 
-def create_app():
+def create_app(mode="deploy"):
     app = Flask(__name__)
 
-    # Configure Flask for development
-    # *COMMENT OUT BEFOR DEPLOYMENT*
-    app.config.from_pyfile(abs_path("config/dev.cfg"))
-
+    # Configure Flask
+    if mode == "deploy":
+        app.config.from_pyfile(abs_path("config/deploy.cfg"))
+    elif mode == "debug":
+        app.config.from_pyfile(abs_path("config/dev.cfg"))
+    
     engine = SearchEngine()
 
     @app.route("/")
