@@ -9,6 +9,9 @@ from flask import url_for
 
 from .SearchEngine import SearchEngine
 
+from mock.MockSearchEngine import MockSearchEngine as MSE
+from mock.MockSpeech import mock_speech
+
 def abs_path(relative):
     """Takes the relative path and returns its absolute position in filesystem.
     It is considered that ther relative path lies on the root directory of this
@@ -24,8 +27,9 @@ def create_app(mode="deploy"):
         app.config.from_pyfile(abs_path("config/deploy.cfg"))
     elif mode == "debug":
         app.config.from_pyfile(abs_path("config/dev.cfg"))
-    
-    engine = SearchEngine()
+
+    # engine = SearchEngine()
+    engine = MSE() #MOCK
 
     @app.route("/")
     def index():
@@ -42,6 +46,7 @@ def create_app(mode="deploy"):
 
     @app.route("/speech/<int:speech_id>")
     def speech(speech_id):
-        speech = engine.speeches_file.get_speech(speech_id)
+        # speech = engine.speeches_file.get_speech(speech_id)
+        speech = mock_speech # MOCK
         return render_template("speech.html", speech=speech)
     return app
