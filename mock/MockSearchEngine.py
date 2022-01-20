@@ -12,13 +12,18 @@ class MockSearchEngine:
         """
         Get all the attributes the speeches have been grouped by.
         """
-        return {"party", "speaker", "date", "test", "foo", "bar", "spam"}
+        return {"party", "speaker", "speech"}
 
     def get_attribute_values(self, attribute: str) -> set[str]:
         """
         Get all values for a given attribute
         """
-        return {"george", "donut", "alpha", "beta", "sigma"}
+        if attribute == "party":
+            return {"nea_dimokratia", "pasok", "oikologoi", "alithino_komma"}
+        elif attribute == "speaker":
+            return {"samaras", "papandreou", "venizelos", "papoulias", "bakogiannis"}
+        else:
+            return {"george", "donut", "alpha", "beta", "sigma"}
 
     def get_keywords(self, attribute: str, attribute_value: str, period_start: date, period_end: date,
                      k=50, custom_stopwords=None) -> list[str]:
@@ -28,7 +33,9 @@ class MockSearchEngine:
         :param custom_stopwords set of words that will be ignored in keyword extraction
         :return: ordered list of keywords
         """
-        return "this is a mock list of top k keywords foo bar baz spam".split()
+        ls = ("this is a mock list of top k keywords foo bar baz spam "*10).split()
+        k = len(ls) if len(ls) < k else k
+        return ls[:k]
 
     def predict_party(self, text: str) -> list[str]:
         """

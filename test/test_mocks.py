@@ -20,6 +20,19 @@ class TestMockSearchEngine(unittest.TestCase):
         self.assertTrue(values)
 
     def test_get_keywords(self):
+        # Simple case
         keywords = MSE().get_keywords("mock", "mock", "mock", "mock")
         self.assertIs(type(keywords), list)
         self.assertTrue(keywords)
+
+        # Request more than available
+        keywords = MSE().get_keywords("mock", "mock", "mock", "mock", k=10000)
+        self.assertIs(type(keywords), list)
+        self.assertTrue(keywords)
+
+        # Request less than available
+        k=3
+        keywords = MSE().get_keywords("mock", "mock", "mock", "mock", k=k)
+        self.assertIs(type(keywords), list)
+        self.assertTrue(keywords)
+        self.assertEqual(len(keywords), k)

@@ -1,6 +1,7 @@
 import random
 import time
 import os
+from datetime import datetime
 
 from flask import Flask
 from flask import render_template
@@ -65,4 +66,35 @@ def create_app(mode="deploy"):
             predictions = engine.predict_party(p_string)
             return render_template("predictions/results.html", predictions=predictions, p_string=p_string)
 
+    @app.route("/highlights/<step>", methods=["GET","POST"])
+    def highlights(step):
+        if not step or step == "attribute":
+            attributes = engine.get_available_attributes()
+            attributes.add("speech") # I hate myself for doing this :(
+            return render_template("highlights/attribute.html", attributes=attributes)
+        elif request.method == "POST" and step == "values":
+            attribute = request.form.get("attribute")
+            if attribute != "speech":
+                values = engine.get_attribute_values(attribute)
+            else:
+                values = None
+            if "default_id" in request.form:
+                default_id = request.form.get("default_id")
+            else:
+                default_id = 1
+            return render_template("highlights/values.html", attribute=attribute, values=values, default_id=default_id)
+        elif request.method == "POST" and step == "results":
+            attribute = request.form.get("attribute")
+            value = request.form.get("value")
+            if attribute != "speech":
+                d_start = request.form.get("start")
+                d_start = datetime.strptime(d_start, "%Y-%m-%d").date()
+                d_end = request.form.get("end")
+                d_end = datetime.strptime(d_end, "%Y-%m-%d").date()
+            else:
+                d_start = None
+                d_end = None
+            k_results = int(request.form.get("k-results"))
+            highlights = engine.get_keywords(attribute, value, d_start, d_end, k=k_results)
+            return render_template("highlights/results.html", highlights=highlights, attribute=attribute, value=value, d_start=d_start, d_end=d_end)
     return app
