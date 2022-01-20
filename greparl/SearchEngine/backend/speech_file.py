@@ -5,6 +5,10 @@ from ..preprocessing.funcs import process_csv_line
 
 
 class SpeechFile:
+    """
+    A file containing speeches of parliament. The speeches must be sorted from oldest to newest (otherwise date_range
+    does not work).
+    """
 
     def __init__(self, speeches_csv_name):
         self.speeches_file = open(speeches_csv_name, "r", encoding='utf8')
@@ -12,6 +16,7 @@ class SpeechFile:
         self.speeches_offset = {}
         self.total_speeches = 0
         self.__calculate_offsets()
+        self._calculate_date_range()
 
     def __calculate_offsets(self) -> None:
         """
@@ -31,8 +36,16 @@ class SpeechFile:
             if (document_id + 1) % 100 == 0:
                 offset = self.speeches_file.tell()
             document_id += 1
-        # Speech ids start at 0, so we add 1
-        self.total_speeches = document_id + 1
+        # Speech ids start at 0, so we add 1 and subtract 1 because the last line is empty
+        self.total_speeches = document_id
+
+    def _calculate_date_range(self) -> None:
+        """
+        Initialize instance variables containing the date range of the documents in the speech file.
+        """
+        # Get the date of the first and the last speech
+        self._start_date = self.get_speech(0).sitting_date
+        self._end_date = self.get_speech(self.total_speeches-1).sitting_date
 
     def get_speech(self, speech_id: int) -> Speech:
         """
@@ -52,13 +65,18 @@ class SpeechFile:
         # Read remaining lines and get to the requested one
         for i in range(speech_id % 100):
             line = self.speeches_file.readline()
-        return process_csv_line(line)
+        # Set the ID of the speech object
+        speech = process_csv_line(line)
+        speech.id = speech_id
+        return speech
 
-    def get_speeches(self, speech_ids: list[int]) -> list[Speech]:
+    def get_speeches(self, speech_ids: list[int], preserve_order=False) -> list[Speech]:
         """
         Gets the speeches with the given id from the file. Offers increased performance compared to individually getting
-        each speech.
-        :param speech_ids: list with ids of
+        each speech. Does not return speeches in the same order as in speech_ids unless preserve_order is specified.
+        :param speech_ids: list with ids of the speeches
+        :param preserve_order If True the order of the speeches is the same as in the original list, if false the
+                              speeches are returned in random order.
         :return:
         """
         # Instead of going directly to the speeches, first group them and then read each bucket. This way each bucket
@@ -77,14 +95,25 @@ class SpeechFile:
             self.speeches_file.seek(offset)
             line = self.speeches_file.readline()
             if speeches[0] % 100 == 0:
-                results.append(process_csv_line(line))
+                speech = process_csv_line(line)
+                # Set the speech ID
+                speech.id = speeches[0]
+                results.append(speech)
                 speeches.pop(0)
             if len(speeches) > 0:
+                # Read until the largest speech ID in the given bucket
                 for i in range(speeches[-1] % 100):
                     line = self.speeches_file.readline()
+                    # Check if we want the current speech ID
                     if bucket*100 + i + 1 == speeches[0]:
-                        results.append(process_csv_line(line))
+                        # Set the speech ID
+                        speech = process_csv_line(line)
+                        speech.id = speeches[0]
+                        results.append(speech)
                         speeches.pop(0)
+        if preserve_order:
+            speeches_by_id = {speech.id: speech for speech in results}
+            results = [speeches_by_id[speech_id] for speech_id in speech_ids]
         return results
 
     def speeches(self):
@@ -96,5 +125,17 @@ class SpeechFile:
         self.speeches_file.seek(0)
         # Ignore the first line
         self.speeches_file.readline()
+        current_speech_id = 0
         while line := self.speeches_file.readline():
-            yield process_csv_line(line)
+            speech = process_csv_line(line)
+            speech.id = current_speech_id
+            current_speech_id += 1
+            yield speech
+
+    @property
+    def date_range(self):
+        """
+        Get the dates of the oldest and newest speech in the speech file.
+        :return:
+        """
+        return self._start_date, self._end_date

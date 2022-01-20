@@ -18,7 +18,7 @@ class Speech:
     roles: list[str]
     gender: str
     contents: str
-    id: int = 0
+    id: int = -1
 
     def title(self):
         """Return the first sentence of the speech that ends with a period (.) in
