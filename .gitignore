@@ -1,7 +1,11 @@
 greparl/data
-index
-tfidf
-groups
+/models
+/index
+/tfidf
+/groups
+/similarity
+/lsa
+processed
 speeches.csv
 .env
 *__pycache__*
