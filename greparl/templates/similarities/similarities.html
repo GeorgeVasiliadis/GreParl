@@ -1,17 +1,16 @@
-{% extends "base.html" %}
+{% extends "actions_base.html" %}
 
-{% block title%}Similarities{% endblock %}
+{% block title %}Similarities{% endblock %}
+
+{% block action_header %}Similarize the Greek Parliament{% endblock %}
+
+{% block action_hint%}Discover which Parliament members share the same opinions, phrases and interests{% endblock %}
 
 {% block content %}
-  <h2 class="text-center py-4">Similarize the Greek Parliament</h2>
-
-  <form class="container w-50 border shadow" action="{{ url_for('similarities') }}" method="POST" autocomplete="off">
-    <div class="m-2">
-      <p class="text-center lead">Choose a grouping attribute:</p>
-
+  <form class="container border shadow p-2 w-50" action="{{ url_for('similarities') }}" method="POST" autocomplete="off">
       <div class="row py-2">
-        <label class="col col-form-label" for="from-member">A</label>
-        <select class="form-select col-8" id="from-member" name="from-member-value">
+        <label class="col col-form-label" for="from-member">Compare</label>
+        <select class="form-select col-6 mx-3" id="from-member" name="from-member-value">
           <option value="#ALL" selected="selected">All</option>
           {% for member in members %}
             <option value="{{ member }}">{{ member.title() }}</option>
@@ -19,33 +18,34 @@
         </select>
       </div>
       <div class="row py-2">
-        <label class="col col-form-label" for="to-member">B</label>
-        <select class="form-select col-8" id="to-member" name="to-member-value">
+        <label class="col col-form-label" for="to-member">To</label>
+        <select class="form-select col-6 mx-3" id="to-member" name="to-member-value">
           <option value="#ALL" selected="selected">All</option>
           {% for member in members %}
             <option value="{{ member }}">{{ member.title() }}</option>
           {% endfor %}
         </select>
       </div>
+      <hr>
       <div class="row py-2">
         <label class="col col-form-label" for="k-results">Results Count</label>
-        <input class="col-8" type="number" id="k-results" name="k-results" value="25" min="1" required="required">
+        <input class="col-6 mx-3" type="number" id="k-results" name="k-results" value="25" min="1" required="required">
       </div>
-        <div class="text-right">
-          <input type="submit" name="Similarize" value="Similarize">
+      <div class="d-flex flex-row-reverse py-2">
+          <input type="submit" name="similarize" value="Similarize">
       </div>
-    </div>
-
+    </form>
     <script>
       function validate(){
         let list_a = document.getElementById("from-member");
         let list_b = document.getElementById("to-member");
         let k_input = document.getElementById("k-results");
-        if ((list_a.value != list_b.value) || (list_a.value == list_b.value && list_a.value == "#ALL")){
+        if ((list_a.value == list_b.value && list_a.value == "#ALL") ||
+            (list_a.value == "#ALL" || list_b.value == "#ALL")) {
           k_input.disabled = false;
         } else {
           k_input.disabled = true;
-          k_input.value = 0;
+          k_input.value = 1;
         }
       }
 

@@ -1,17 +1,38 @@
-{% extends "base.html" %}
+{% extends "actions_base.html" %}
 
-{% block title%}Similarities{% endblock %}
+{% block title %}Similarities{% endblock %}
+
+{% block action_header %}Similarize the Greek Parliament{% endblock %}
+
+
 
 {% block content %}
-  <h2 class="text-center py-4">Similarize the Greek Parliament</h2>
-
   {% if tuples %}
     <p class="lead text-center pb-2">Top {{ results|length }} Similarities</p>
     {% for result in results %}
-      <p class="text-center">{{ result[0].name.title() }} is {{ result[2] }} similar to {{ result[1].name.title() }}</p>
+    <div class="row mx-auto w-75 mb-5 border shadow d-flex justify-content-around align-items-center text-center">
+      <div class="col d-flex flex-column align-content-center">
+        <span class="font-weight-bold">{{ result[0].name.title() }}</span>
+        <span>{{ result[0].parties[0].title() }}</span>
+      </div>
+      <div class="col d-flex flex-column align-content-center">
+        <span style="font-size: 3rem" class="bi bi-arrow-right"></span>
+        <span>Similarity: {{ "%.3f" % result[2] }}</span>
+      </div>
+      <div class="col d-flex flex-column align-content-center">
+        <span class="font-weight-bold">{{ result[1].name.title() }}</span>
+        <span>{{ result[1].parties[0].title() }}</span>
+      </div>
+    </div>
     {% endfor %}
   {% else %}
-    <p class="lead text-center pb-2">Top {{ results.similar_members|length }} Similarities of {{results.original_member.name.title()}}</p>
+    <p class="lead text-center pb-2">
+      {% if results.similar_members|length == 1 %}
+        Similarity for {{ results.original_member.name.title() }}
+      {% else %}
+        Top {{ results.similar_members|length }} Similarities of {{ results.original_member.name.title() }}
+      {% endif %}
+      </p>
     <table class="table table-striped table-hover table-bordered shadow text-center w-50 mx-auto">
       <thead class="thead-dark">
         <tr>
@@ -25,7 +46,7 @@
           <tr>
             <th scope="row">{{ loop.index }}</th>
             <td>{{ results.similar_members[i].name.title() }}</td>
-            <td>{{ results.scores[i] }} </td>
+            <td>{{ "%.3f" % results.scores[i] }} </td>
           </tr>
         {% endfor %}
       </tbody>

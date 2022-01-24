@@ -1,43 +1,54 @@
 {% extends "base.html" %}
 
-{% block title%}Speech{% endblock %}
+{% block title %}Speech{% endblock %}
 
 {% block content %}
+  <form class="d-none" action="{{ url_for('highlights', step='values') }}" method="POST" id="highlight_me_form">
+    <input class="hidden" name="default_id" value="{{ speech.id }}">
+    <input class="hidden" name="attribute" value="speech">
+  </form>
+
+  <div class="w-75 mx-auto">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Speech #{{ speech.id }}</h2>
+      <span>
+        <i class="bi bi-magic"></i>
+        <a href="#" onclick="highlightMe()">Highlight Me</a>
+      </span>
+    </div>
+    <hr class="mt-0 pb-4">
+    <div class="row d-flex justify-content-between">
+      <div class="col-5">
+        <table class="table table-bordered text-center">
+          <tr>
+            <th>Speaker</th>
+            <td>{{ speech.member_name.title() }}</td>
+          </tr>
+          <tr>
+            <th>Speaker's Gender</th>
+            <td>{{ speech.gender.title() }}</td>
+          </tr>
+          <tr>
+            <th>Sitting Date</th>
+            <td>{{ speech.sitting_date }}</td>
+          </tr>
+          <tr>
+            <th>Political Party</th>
+            <td>{{ speech.political_party.title() }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col">
+        <p class="text-justify">{{speech.contents}}</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     function highlightMe(){
       document.getElementById('highlight_me_form').submit();
       return false;
     }
   </script>
-  <form class="d-none" action="{{ url_for('highlights', step='values') }}" method="POST" id="highlight_me_form">
-    <input class="hidden" name="default_id" value="{{ speech.id }}">
-    <input class="hidden" name="attribute" value="speech">
-  </form>
-  <div class="d-flex justify-content-between align-items-center">
-    <h2>Speech #{{ speech.id }}</h2>
-    <span>
-      <i class="bi bi-magic"></i>
-      <a href="#" onclick="highlightMe()">Highlight Me</a>
-    </span>
-  </div>
-  <table>
-    <tr>
-      <th>Speaker</th>
-      <td>{{ speech.member_name }}</td>
-    </tr>
-    <tr>
-      <th>Speaker's Gender</th>
-      <td>{{ speech.gender }}</td>
-    </tr>
-    <tr>
-      <th>Sitting Date</th>
-      <td>{{ speech.sitting_date }}</td>
-    </tr>
-    <tr>
-      <th>Political Party</th>
-      <td>{{ speech.political_party }}</td>
-    </tr>
-  </table>
-  <p>{{speech.contents}}</p>
 
 {% endblock %}

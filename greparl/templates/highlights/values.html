@@ -1,44 +1,44 @@
-{% extends "base.html" %}
+{% extends "actions_base.html" %}
 
-{% block title%}Highlights{% endblock %}
+{% block title %}Highlights{% endblock %}
+
+{% block action_header %}Highlight the Greek Parliament{% endblock %}
+
+{% block action_hint %}Specify options for {{ attribute.title().replace("_"," ") }}{% endblock %}
 
 {% block content %}
-  <h2 class="text-center py-4">Highlight the Greek Parliament</h2>
-
-  <form class="container w-50 border shadow" action="{{ url_for('highlights', step='results') }}" method="post" autocomplete="off">
+  <form class="container border shadow p-2 w-50" action="{{ url_for('highlights', step='results') }}" method="post" autocomplete="off">
+    <input type="hidden" id="attribute" name="attribute" value="{{ attribute }}">
     <div class="m-2">
-      <input type="hidden" id="attribute" name="attribute" value="{{ attribute }}">
-      <p class="text-center lead">Specify options for {{ attribute.title() }}:</p>
       {% if attribute == "speech" %}
       <div class="row py-2">
           <label class="col col-form-label" for="speech-id">#Speech</label>
-          <input class="form-select col-8" type="number" id="speech-id" name="value" min="0" value="{{ default_id }}" required="required">
+          <input class="form-select col-5 mx-3" type="number" id="speech-id" name="value" min="0" value="{{ default_id }}" required="required">
       </div>
       {% else %}
         <div class="row py-2">
-            <label class="col col-form-label" for="select-list">{{ attribute.title() }}</label>
-            <select class="form-select col-8" id="select-list" name="value">
+            <label class="col col-form-label" for="select-list">{{ attribute.title().replace("_"," ") }}</label>
+            <select class="form-select col-5 mx-3" id="select-list" name="value">
               {% for value in values %}
-                <option value="{{ value }}">{{ value.title() }}</option>
+                <option value="{{ value }}">{{ value.title().replace("_"," ") }}</option>
               {% endfor %}
             </select>
         </div>
         <div class="row py-2">
           <label class="col col-form-label" for="start">From</label>
-          <input class="col-8" type="date" id="start" name="start" value="1990-01-01" min="1970-01-01">
+          <input class="col-5 mx-3" type="date" id="start" name="start" value="1990-01-01" min="1970-01-01">
         </div>
         <div class="row py-2">
           <label class="col col-form-label" for="start">To</label>
-          <input class="col-8" type="date" id="end" name="end" value="1995-01-01" min="1970-01-01">
+          <input class="col-5 mx-3" type="date" id="end" name="end" value="1995-01-01" min="1970-01-01">
         </div>
       {% endif %}
       <div class="row py-2">
         <label class="col col-form-label" for="k-results">Results Count</label>
-        <input class="col-8" type="number" id="k-results" name="k-results" value="25" min="1" max="100" required="required">
+        <input class="col-5 mx-3" type="number" id="k-results" name="k-results" value="25" min="1" max="100" required="required">
       </div>
-      <div class="row">
-        <div class="col-8"></div>
-        <input class="col-4" type="submit" name="highlight" value="Highlight">
+      <div class="d-flex flex-row-reverse py-2">
+          <input type="submit" name="highlight" value="Highlight">
       </div>
     </div>
   </form>

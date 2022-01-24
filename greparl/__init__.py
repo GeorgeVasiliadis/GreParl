@@ -77,7 +77,8 @@ def create_app(mode="deploy"):
     @app.route("/similarities", methods=["POST", "GET"])
     def similarities():
         if request.method == "GET":
-            members = engine.get_attribute_values('speaker_name')
+            members = sorted(engine.get_attribute_values('speaker_name'))
+            members = list(filter(lambda x: x and not x.isspace(), members))
             return render_template("similarities/similarities.html", members=members)
         elif request.method == "POST":
             k_results = str(request.form.get("k-results"))
@@ -116,11 +117,14 @@ def create_app(mode="deploy"):
         if not step or step == "attribute":
             attributes = engine.get_available_attributes()
             attributes.add("speech") # I hate myself for doing this :(
+            attributes = sorted(attributes)
+            attributes = list(filter(lambda x: x and not x.isspace(), attributes))
             return render_template("highlights/attribute.html", attributes=attributes)
         elif request.method == "POST" and step == "values":
             attribute = request.form.get("attribute")
             if attribute != "speech":
-                values = engine.get_attribute_values(attribute)
+                values = sorted(engine.get_attribute_values(attribute))
+                values = list(filter(lambda x: x and not x.isspace(), values))
             else:
                 values = None
             if "default_id" in request.form:

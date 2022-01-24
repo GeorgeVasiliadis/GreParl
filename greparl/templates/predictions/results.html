@@ -1,15 +1,15 @@
-{% extends "base.html" %}
+{% extends "actions_base.html" %}
 
-{% block title%}Predictions{% endblock %}
+{% block title %}Predictions{% endblock %}
+
+{% block action_header %}Predict the Greek Parliament{% endblock %}
+
+{% block action_hint %}Top {{ predictions|length }} Predictions of{% endblock %}
 
 {% block content %}
-  <h2 class="text-center py-4">Predict the Greek Parliament</h2>
-
-  <p class="lead text-center pb-2">Top {{ predictions|length }} Predictions of:</p>
-
   <div class="container w-50 pb-5">
     <blockquote class="blockquote text-center">
-      <p class=" border-dark border-left border-right font-italic">
+      <p class="px-2 mx-5 border-dark border-left border-right font-italic">
         {{ p_string }}
       </p>
     </blockquote>

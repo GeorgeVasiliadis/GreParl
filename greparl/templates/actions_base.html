@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block pre_content %}
+  <h2 class="text-center pt-4 pb-2">{% block action_header %}{% endblock %}</h2>
+  <div class="container text-center w-50">
+    <p class="lead">{% block action_hint %}{% endblock %}</p>
+  </div>
+{% endblock %}

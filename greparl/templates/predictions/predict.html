@@ -1,15 +1,22 @@
-{% extends "base.html" %}
+{% extends "actions_base.html" %}
 
-{% block title%}Predictions{% endblock %}
+{% block title %}Predictions{% endblock %}
+
+{% block action_header %}Predict the Greek Parliament{% endblock %}
+
+{%block action_hint %}Provide a quote, a topic or a set of keywords and find out which party is likely to have discussed about it in the Greek Parliament{% endblock %}
 
 {% block content %}
-  <h2 class="text-center py-2">Predict the Greek Parliament</h2>
-  <div class="container text-center pt-4 w-50">
-    <p class="lead">Provide a quote, a topic or a set of keywords and find out which party is likely to have discussed about it in the Greek Parliament</p>
-  </div>
-  <form class="text-center" name="predict-form" onsubmit="return validateForm()" action="/predict" method="post" autocomplete="off">
-    <input class="my-3" type="textarea" size="55" id="pString" name="pString" autocomplete="off"><br>
-    <input class="mx-1" type="submit" name="predict" value="Predict!">
+  <form class="container border shadow p-2 w-50" name="predict-form" onsubmit="return validateForm()" action="/predict" method="post" autocomplete="off">
+    <div class="row">
+      <label class="col col-form-label" for="pString">Quote:</label>
+    </div>
+    <div class="row py-2">
+      <input class="col mx-3" type="text" size="50" id="pString" name="pString" autocomplete="off"><br>
+    </div>
+    <div class="d-flex flex-row-reverse py-2">
+        <input type="submit" name="predict" value="Predict">
+    </div>
   </form>
   <script>
     function validateForm() {

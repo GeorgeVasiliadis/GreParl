@@ -1,12 +1,12 @@
-{% extends "base.html" %}
+{% extends "actions_base.html" %}
 
-{% block title%}Highlights{% endblock %}
+{% block title %}Highlights{% endblock %}
+
+{% block action_header %}Highlight the Greek Parliament{% endblock %}
+
+{% block action_hint %}Top {{ highlights|length }} Highligths of "{{ value.title().replace("_"," ") }}" {% if d_start %} from {{ d_start }} to {{ d_end }} {% endif %}{% endblock %}
 
 {% block content %}
-  <h2 class="text-center py-4">Highlight the Greek Parliament</h2>
-
-  <p class="lead text-center pb-2"><mark>Top {{ highlights|length }} Highligths</mark> of "{{ value.title().replace("_"," ") }}" {% if d_start %} from {{ d_start }} to {{ d_end }} {% endif %}</p>
-
   <table class="table table-striped table-hover table-bordered shadow text-center w-50 mx-auto">
     <thead class="thead-dark">
       <tr>
