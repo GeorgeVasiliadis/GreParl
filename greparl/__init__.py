@@ -1,3 +1,4 @@
+import random
 import time
 import os
 
@@ -37,12 +38,17 @@ def create_app(mode="deploy"):
 
     @app.route("/search", methods=["POST"])
     def search():
-        q_string = request.form.get("qString")
-        t1 = time.time()
-        speeches = engine.search(q_string)
-        t2 = time.time()
-        time_str = f"{(t2-t1):.2f}"
-        return render_template("results.html", speeches=speeches, count=len(speeches), time=time_str, q_string=q_string)
+        if request.form.get("grep"):
+            q_string = request.form.get("qString")
+            t1 = time.time()
+            speeches = engine.search(q_string)
+            t2 = time.time()
+            time_str = f"{(t2-t1):.2f}"
+            return render_template("results.html", speeches=speeches, count=len(speeches), time=time_str, q_string=q_string)
+        else:
+            max_ = engine.get_total_speeches()
+            id_ = random.randint(1, max_)
+            return redirect(url_for("speech", speech_id=id_))
 
     @app.route("/speech/<int:speech_id>")
     def speech(speech_id):

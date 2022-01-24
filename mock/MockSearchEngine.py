@@ -38,3 +38,6 @@ class MockSearchEngine:
         """
         predictions = ["george", "donut", "alpha", "beta", "sigma"]
         return predictions
+
+    def get_total_speeches(self) -> int:
+        return 100
