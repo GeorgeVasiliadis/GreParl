@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title%}Predictions{% endblock %}
+
+{% block content %}
+  <h2 class="text-center py-2">Predict the Greek Parliament</h2>
+  <div class="container text-center pt-4 w-50">
+    <p class="lead">Provide a quote, a topic or a set of keywords and find out which party is likely to have discussed about it in the Greek Parliament</p>
+  </div>
+  <form class="text-center" action="/predict" method="post" autocomplete="off">
+    <input class="my-3" type="textarea" size="55" id="pString" name="pString" autocomplete="off"><br>
+    <input class="mx-1" type="submit" name="predict" value="Predict!">
+  </form>
+{% endblock %}

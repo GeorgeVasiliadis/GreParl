@@ -49,4 +49,14 @@ def create_app(mode="deploy"):
         # speech = engine.speeches_file.get_speech(speech_id)
         speech = mock_speech # MOCK
         return render_template("speech.html", speech=speech)
+
+    @app.route("/predict", methods=["POST", "GET"])
+    def predict():
+        if request.method == "GET":
+            return render_template("predictions/predict.html")
+        elif request.method == "POST":
+            p_string = request.form.get("pString")
+            predictions = engine.predict_party(p_string)
+            return render_template("predictions/results.html", predictions=predictions, p_string=p_string)
+
     return app

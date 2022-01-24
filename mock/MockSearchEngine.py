@@ -29,3 +29,12 @@ class MockSearchEngine:
         :return: ordered list of keywords
         """
         return "this is a mock list of top k keywords foo bar baz spam".split()
+
+    def predict_party(self, text: str) -> list[str]:
+        """
+        Try to predict the member of which party said the given text.
+        :param text: Text to try to predict
+        :return: Which party's member could have said the text.
+        """
+        predictions = ["george", "donut", "alpha", "beta", "sigma"]
+        return predictions

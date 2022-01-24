@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title%}Predictions{% endblock %}
+
+{% block content %}
+  <h2 class="text-center py-4">Predict the Greek Parliament</h2>
+
+  <p class="lead text-center pb-2">Top {{ predictions|length }} Predictions of:</p>
+
+  <div class="container w-50 pb-5">
+    <blockquote class="blockquote text-center">
+      <p class=" border-dark border-left border-right font-italic">
+        {{ p_string }}
+      </p>
+    </blockquote>
+  </div>
+
+  <table class="table table-striped table-hover table-bordered shadow text-center w-50 mx-auto">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Predicted Party</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prediction in predictions %}
+        <tr>
+          <th scope="row">{{ loop.index }}</th>
+          <td>{{ prediction.title() }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
