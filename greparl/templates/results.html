@@ -4,8 +4,22 @@
 
 {% block content %}
   {% if speeches %}
+    <script>
+      function deepSearch(){
+        document.getElementById('deep_search_form').submit();
+        return false;
+      }
+    </script>
+    <form class="d-none" action="{{ url_for('deep_search') }}" method="POST" id="deep_search_form">
+      <input class="hidden" name="qString" value="{{ q_string }}">
+    </form>
     <h2 class="border-bottom">Results for <span class="font-italic">"{{ q_string }}"</span></h2>
-    <h4 class="lead mb-5">About {{ count }} results ({{ time }} seconds)</h4>
+    <div class="d-flex mb-5 justify-content-between">
+      <h4 class="lead">About {{ count }} results ({{ time }} seconds)</h4>
+      {% if not deep_search %}
+        <a href="#" onClick="deepSearch()">Perform a deeper search</a>
+      {% endif %}
+    </div>
       <ul class="list-group">
         {% for speech in speeches %}
           <li class="list-group-item border-0 px-0">

@@ -9,6 +9,11 @@ class TestMockSearchEngine(unittest.TestCase):
         self.assertIs(type(results), list)
         self.assertTrue(results)
 
+    def test_search_lsa(self):
+        results = MSE().search_lsa("mock")
+        self.assertIs(type(results), list)
+        self.assertTrue(results)
+
     def test_get_available_attributes(self):
         attributes = MSE().get_available_attributes()
         self.assertIs(type(attributes), set)

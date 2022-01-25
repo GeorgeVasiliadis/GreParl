@@ -8,6 +8,15 @@ class MockSearchEngine:
         result = [mock_speech]
         return result*3 # Return [speech, speech, speech]
 
+    def search_lsa(self, query: str, number_of_results=10) -> list[object]:
+        """
+        Search using LSA
+        :param query: query string
+        :param number_of_results: number of results to fetch
+        :return: list of
+        """
+        return self.search("mock")
+
     def get_available_attributes(self) -> set[str]:
         """
         Get all the attributes the speeches have been grouped by.
