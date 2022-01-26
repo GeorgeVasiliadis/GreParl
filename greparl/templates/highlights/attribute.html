@@ -5,7 +5,7 @@
 {% block content %}
   <h2 class="text-center py-4">Highlight the Greek Parliament</h2>
 
-  <form class="border shadow mx-auto p-2 w-50" action="{{ url_for('highlights', step='values') }}" method="post" autocomplete="off">
+  <form class="border shadow mx-auto p-2 w-50" name="attribute-form" onsubmit="return validateForm()" action="{{ url_for('highlights', step='values') }}" method="post" autocomplete="off">
     <p class="text-center lead">Choose a grouping attribute:</p>
       {% for attribute in attributes %}
         <div class="form-check mx-auto py-1 w-25">
@@ -17,5 +17,16 @@
         <input type="submit" name="highlight" value="Highlight">
       </div>
   </form>
-
+  <script>
+    function validateForm() {
+      let radios = document.getElementsByName("attribute");
+      var checked = false;
+      for (var j=0; j<radios.length; j++){
+        if (radios[j].checked){
+          return true
+        }
+      }
+        return false;
+    }
+  </script>
 {% endblock %}

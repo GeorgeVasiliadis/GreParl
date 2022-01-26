@@ -29,12 +29,28 @@
       </div>
       <div class="row py-2">
         <label class="col col-form-label" for="k-results">Results Count</label>
-        <input class="col-8" type="number" id="k-results" name="k-results" value="25" min="1">
+        <input class="col-8" type="number" id="k-results" name="k-results" value="25" min="1" required="required">
       </div>
         <div class="text-right">
           <input type="submit" name="Similarize" value="Similarize">
       </div>
     </div>
+
+    <script>
+      function validate(){
+        let list_a = document.getElementById("from-member");
+        let list_b = document.getElementById("to-member");
+        let k_input = document.getElementById("k-results");
+        if ((list_a.value != list_b.value) || (list_a.value == list_b.value && list_a.value == "#ALL")){
+          k_input.disabled = false;
+        } else {
+          k_input.disabled = true;
+          k_input.value = 0;
+        }
+      }
+
+      document.addEventListener("click", validate)
+    </script>
   </form>
 
 {% endblock %}

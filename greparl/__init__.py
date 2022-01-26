@@ -36,6 +36,10 @@ def create_app(mode="deploy"):
     # engine = SearchEngine()
     engine = MSE() #MOCK
 
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('404.html'), 404
+
     @app.route("/")
     def index():
         return render_template("index.html")
@@ -44,7 +48,7 @@ def create_app(mode="deploy"):
     def search():
         if request.form.get("randomGrep"):
             max_ = engine.get_total_speeches()
-            id_ = random.randint(1, max_)
+            id_ = random.randint(0, max_)
             return redirect(url_for("speech", speech_id=id_))
         else:
             q_string = request.form.get("qString")
@@ -76,7 +80,11 @@ def create_app(mode="deploy"):
             members = engine.get_attribute_values('speaker_name')
             return render_template("similarities/similarities.html", members=members)
         elif request.method == "POST":
-            k_results = int(request.form.get("k-results"))
+            k_results = str(request.form.get("k-results"))
+            if k_results.isnumeric():
+                k_results = int(k_results)
+            else:
+                k_results = 0
             member_A = request.form.get("from-member-value")
             member_B = request.form.get("to-member-value")
             tuples = False
@@ -118,7 +126,7 @@ def create_app(mode="deploy"):
             if "default_id" in request.form:
                 default_id = request.form.get("default_id")
             else:
-                default_id = 1
+                default_id = 0
             return render_template("highlights/values.html", attribute=attribute, values=values, default_id=default_id)
         elif request.method == "POST" and step == "results":
             attribute = request.form.get("attribute")

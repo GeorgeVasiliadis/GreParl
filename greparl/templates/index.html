@@ -4,9 +4,22 @@
 
 {% block content %}
   <h2 class="text-center py-2">Grep the Greek Parliament</h2>
-  <form class="text-center" action="/search" method="post" autocomplete="off">
+  <form class="text-center" name="search-form" onsubmit="return validateForm(this)" action="/search" method="post" autocomplete="off">
     <input class="my-3" type="text" size="55" id="qString" name="qString" autocomplete="off"><br>
     <input class="mx-1" type="submit" name="grep" value="Grep Parliament!">
     <input class="mx-1" type="submit" name="randomGrep" value="I'm Feeling Lucky">
   </form>
+
+  <script>
+    function validateForm() {
+      if (document.activeElement.name == "randomGrep") {
+        return true;
+      } else {
+        let x = document.forms["search-form"]["qString"].value;
+        if (x == "") {
+          return false;
+        }
+      }
+    }
+  </script>
 {% endblock %}
