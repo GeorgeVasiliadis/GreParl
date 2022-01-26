@@ -12,7 +12,7 @@
       {% if attribute == "speech" %}
       <div class="row py-2">
           <label class="col col-form-label" for="speech-id">#Speech</label>
-          <input class="form-select col-8" type="number" id="speech-id" name="value" min="0">
+          <input class="form-select col-8" type="number" id="speech-id" name="value" min="0" value="{{ default_id }}" required="required">
       </div>
       {% else %}
         <div class="row py-2">

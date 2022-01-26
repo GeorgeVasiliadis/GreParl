@@ -3,7 +3,23 @@
 {% block title%}Speech{% endblock %}
 
 {% block content %}
-  <h2>#{{ speech.id }}</h2>
+  <script>
+    function highlightMe(){
+      document.getElementById('highlight_me_form').submit();
+      return false;
+    }
+  </script>
+  <form class="d-none" action="{{ url_for('highlights', step='values') }}" method="POST" id="highlight_me_form">
+    <input class="hidden" name="default_id" value="{{ speech.id }}">
+    <input class="hidden" name="attribute" value="speech">
+  </form>
+  <div class="d-flex justify-content-between align-items-center">
+    <h2>Speech #{{ speech.id }}</h2>
+    <span>
+      <i class="bi bi-magic"></i>
+      <a href="#" onclick="highlightMe()">Highlight Me</a>
+    </span>
+  </div>
   <table>
     <tr>
       <th>Speaker</th>
