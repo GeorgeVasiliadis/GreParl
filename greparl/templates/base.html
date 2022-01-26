@@ -34,6 +34,16 @@
         </li>
       </ul>
     </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category if category in ["danger", "success", "info"] else "info" }} alert-dismissible fade show in m-0" role="alert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
     <div class="container my-5 w-75">
       {% block content %}

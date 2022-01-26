@@ -8,6 +8,7 @@ from flask import render_template
 from flask import request
 from flask import redirect
 from flask import url_for
+from flask import flash
 
 from .SearchEngine import SearchEngine
 
@@ -29,6 +30,8 @@ def create_app(mode="deploy"):
         app.config.from_pyfile(abs_path("config/deploy.cfg"))
     elif mode == "debug":
         app.config.from_pyfile(abs_path("config/dev.cfg"))
+
+    app.config['SECRET_KEY'] = b'69eaedecc0b3fc06a705dc0e6e238497108aacd368d55723bbf5067c08c4ddd5'
 
     # engine = SearchEngine()
     engine = MSE() #MOCK
