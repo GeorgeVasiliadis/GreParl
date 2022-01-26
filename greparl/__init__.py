@@ -67,6 +67,30 @@ def create_app(mode="deploy"):
         speech = mock_speech # MOCK
         return render_template("speech.html", speech=speech)
 
+    @app.route("/similarities", methods=["POST", "GET"])
+    def similarities():
+        if request.method == "GET":
+            members = engine.get_attribute_values('speaker_name')
+            return render_template("similarities/similarities.html", members=members)
+        elif request.method == "POST":
+            k_results = int(request.form.get("k-results"))
+            member_A = request.form.get("from-member-value")
+            member_B = request.form.get("to-member-value")
+            tuples = False
+            if member_A != "#ALL":
+                if member_B != "#ALL":
+                    sim_results = engine.get_similarity_between_members(member_A, member_B)
+                else: # member_B is #ALL
+                    sim_results = engine.get_most_similar_to(member_A, k=k_results)
+            else: # member_A is #ALL
+                if member_B != "#ALL":
+                    sim_results = engine.get_most_similar_to(member_B, k=k_results)
+                else: # member_B is #ALL
+                    sim_results = engine.get_most_similar(k_results)
+                    tuples = True
+
+            return render_template("similarities/results.html", results=sim_results, tuples=tuples)
+
     @app.route("/predict", methods=["POST", "GET"])
     def predict():
         if request.method == "GET":

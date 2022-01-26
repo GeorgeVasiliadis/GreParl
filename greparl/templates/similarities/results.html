@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title%}Similarities{% endblock %}
+
+{% block content %}
+  <h2 class="text-center py-4">Similarize the Greek Parliament</h2>
+
+  {% if tuples %}
+    <p class="lead text-center pb-2">Top {{ results|length }} Similarities</p>
+    {% for result in results %}
+      <p class="text-center">{{ result[0].name.title() }} is {{ result[2] }} similar to {{ result[1].name.title() }}</p>
+    {% endfor %}
+  {% else %}
+    <p class="lead text-center pb-2">Top {{ results.similar_members|length }} Similarities of {{results.original_member.name.title()}}</p>
+    <table class="table table-striped table-hover table-bordered shadow text-center w-50 mx-auto">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Parliament Member</th>
+          <th scope="col">Similarity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(results.similar_members|length) %}
+          <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ results.similar_members[i].name.title() }}</td>
+            <td>{{ results.scores[i] }} </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+{% endblock %}

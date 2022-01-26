@@ -1,6 +1,12 @@
 from datetime import date
 
 from .MockSpeech import mock_speech
+from .MockSimilarity import MockSimilarityMember, MockSimilarityResult
+from .MockSimilarity import mock_similarity_member, mock_similarity_result
+
+# Type aliases
+SimilarityMember = MockSimilarityMember
+SimilarityResult = MockSimilarityResult
 
 class MockSearchEngine:
 
@@ -29,7 +35,7 @@ class MockSearchEngine:
         """
         if attribute == "party":
             return {"nea_dimokratia", "pasok", "oikologoi", "alithino_komma"}
-        elif attribute == "speaker":
+        elif attribute == "speaker" or "member-name":
             return {"samaras", "papandreou", "venizelos", "papoulias", "bakogiannis"}
         else:
             return {"george", "donut", "alpha", "beta", "sigma"}
@@ -57,3 +63,30 @@ class MockSearchEngine:
 
     def get_total_speeches(self) -> int:
         return 100
+
+    def get_most_similar(self, k=50) -> list[tuple[SimilarityMember, SimilarityMember, float]]:
+        """
+        Get the most similar parliament member pairs.
+        :param k: Number of pairs to get
+        :return: List with tuples. Each tuple contains: Two SimilarityMember object corresponding to the two members.
+                 Their similarity score [0-1].
+        """
+        return [(mock_similarity_member, mock_similarity_member, 0.56)]*k
+
+    def get_most_similar_to(self, member_name: str, k=10) -> SimilarityResult:
+        """
+        Returns the k members most similar to the given member.
+        :return: SimilarityResult object. See its docs.
+        """
+
+        return mock_similarity_result
+
+    def get_similarity_between_members(self, member1_name: str, member2_name: str) -> SimilarityResult:
+        """
+        Returns the similarity between the given two members.
+        :return: SimilarityResult with the given member and one other member.
+        """
+        m = mock_similarity_result
+        m.similar_members = [m.similar_members[0]]
+        m.scores = [m.scores[0]]
+        return m

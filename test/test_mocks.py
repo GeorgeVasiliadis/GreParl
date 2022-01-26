@@ -41,3 +41,18 @@ class TestMockSearchEngine(unittest.TestCase):
         self.assertIs(type(keywords), list)
         self.assertTrue(keywords)
         self.assertEqual(len(keywords), k)
+
+
+    def test_get_most_similar(self):
+        results = MSE().get_most_similar(10)
+        self.assertTrue(results)
+        self.assertEqual(len(results), 10)
+
+    def test_get_most_similar_to(self):
+        result = MSE().get_most_similar_to("Bobos", 10)
+        self.assertTrue(result)
+
+
+    def test_get_similarity_between_members(self):
+        results = MSE().get_similarity_between_members("Bobos", "Robos")
+        self.assertTrue(results)
