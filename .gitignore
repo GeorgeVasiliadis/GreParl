@@ -9,3 +9,5 @@ processed
 speeches.csv
 .env
 *__pycache__*
+/dist
+/*.egg-info

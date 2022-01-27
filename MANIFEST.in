@@ -1,0 +1,5 @@
+include greek_stemmer/*.yml
+recursive-include greparl *.cfg *.html
+
+prune test
+prune mock

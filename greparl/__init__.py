@@ -12,9 +12,6 @@ from flask import flash
 
 from .SearchEngine import SearchEngine
 
-from mock.MockSearchEngine import MockSearchEngine as MSE
-from mock.MockSpeech import mock_speech
-
 def abs_path(relative):
     """Takes the relative path and returns its absolute position in filesystem.
     It is considered that ther relative path lies on the root directory of this
@@ -33,8 +30,7 @@ def create_app(mode="deploy"):
 
     app.config['SECRET_KEY'] = b'69eaedecc0b3fc06a705dc0e6e238497108aacd368d55723bbf5067c08c4ddd5'
 
-    # engine = SearchEngine()
-    engine = MSE() #MOCK
+    engine = SearchEngine()
 
     @app.errorhandler(404)
     def page_not_found(e):
@@ -70,8 +66,7 @@ def create_app(mode="deploy"):
 
     @app.route("/speech/<int:speech_id>")
     def speech(speech_id):
-        # speech = engine.speeches_file.get_speech(speech_id)
-        speech = mock_speech # MOCK
+        speech = engine.speeches_file.get_speech(speech_id)
         return render_template("speech.html", speech=speech)
 
     @app.route("/similarities", methods=["POST", "GET"])
