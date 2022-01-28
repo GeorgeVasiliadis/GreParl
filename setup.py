@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setuptools.setup(
     name="GreParl",
-    version="0.2",
+    version="0.3",
     author="George Vasiliadis",
     author_email="geor.vasiliadis@gmail.com",
     description="Grep the Greek Parliament",
