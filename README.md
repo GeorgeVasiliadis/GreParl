@@ -71,7 +71,7 @@ Speech sets can be grouped by parties or parliament members and can be limited u
 
 You can compare parliament members to find out who tend to speak about the same topics the most.
 
-## Προβλέψεις
+## Predictions
 
 ![Screenshot of Predictions](https://github.com/GeorgeVasiliadis/GreParl/blob/main/gallery/Predictions.PNG?raw=true)
 
